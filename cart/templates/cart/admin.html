@@ -1,0 +1,171 @@
+<html>
+<head>
+
+<title>KimLee Shooping Mall</title>
+
+{% load static %}
+<script type="text/javascript" src="{% static 'cart/js/jquery-3.2.1.min.js' %}"></script>
+<style type="text/css">
+	
+a:visited{
+text-decoration: none;
+color: #fff
+
+}
+a:link{
+text-decoration: none;
+color: #fff
+
+}
+
+</style>
+</head>
+<script type="text/javascript">
+	
+$(document).ready(function(){
+
+$("#loadForm").click(function(){
+
+
+
+	location = "/kimlee/uploadform";
+
+	
+
+})
+
+$("#viewproduct").click(function(){
+
+	location = "/kimlee/viewproduct";
+
+	
+
+})
+
+$(".delete").click(function(){
+
+pname = $(this).find('input').attr('name').valueOf();
+//alert(pname);
+//location = "/kimlee/deleteproduct/";
+
+
+
+$.ajax({
+
+	type:"POST",
+	url:'/kimlee/deleteproduct/',
+	data:{
+		pname:pname,
+	 csrfmiddlewaretoken:'{{ csrf_token }}'
+	},
+	success:function(data){
+
+		alert("Successfully Deleted")
+if(data =="deleted"){
+
+	location = "/kimlee/viewproduct";
+}	
+
+	},
+	error:function(obj,status, e){
+		alert(e);
+	}
+
+
+})
+
+
+
+
+
+
+})
+
+})
+
+</script>
+<body>
+
+	<div style="width: 100%;border:0px solid #000" align="center" >
+
+		<div id="banner" align="center" style="width:900px; height: 35%;border:1px solid #000;margin-left: 15%">
+
+			<div style="position: absolute;z-index: 0.5"><img src="{% static 'cart/images/banner1.jpg'%}" width="900px" height="35%" /></div>
+			<div style="position: absolute;z-index: 1; margin-left:16%"><img src="{% static 'cart/images/cart3.png'%}" width="30%" /><img src="{% static 'cart/images/cart3.png'%}" width="30%" /></div>
+				<div style="position: absolute;z-index: 1; margin-left:25%"><p>&nbsp;</p><img src="{% static 'cart/images/cart2.png'%}" width="50%" /></div>
+				<div style="position: absolute;z-index: 1; margin-left:38%"><p>&nbsp;</p><img src="{% static 'cart/images/cart4.png'%}" width="50%" /></div>
+				<div style="position: absolute;z-index: 1; margin-left:0%"><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><h2 style="color:#fff;float: left">Benedict Ladies World</h2></div>
+				<div id="navigation_bar" style="position: absolute;z-index: 4;top:36%;width: 250px;border: 1px solid #fff;background-color: #500000;color:#fff">
+					<table border="1px";  style="width: 100%;color:#fff;font-weight: bold;border-collapse: collapse;border-color: #fff solid 1px" >
+						<tr>
+							<td><a id="loadForm" style="cursor: pointer;">Upload Product</a></td>
+							</tr>
+								<tr>
+							<td><a id='viewproduct' style="cursor: pointer;">View Product</a></td>
+							</tr>
+								<tr>
+							<td>Manage</td>
+							</tr>
+							</table>
+				</div>
+				<div id="response_click" style="position: absolute;z-index: 4;left: 37%;top:36%;width:625px;">
+					
+				{% if forms %}
+				<div style="width: 100%; font-weight: bold;color:#500000" id="tag">UPLOAD PRODUCT</div>
+					<form method="POST" action="save/" enctype="multipart/form-data">
+						{% csrf_token %}
+					
+					{{ forms.as_p }}
+					<br><br/>
+					<input type="submit" name="submit" value="Submit">
+
+			</form>
+			{% endif %}
+
+			{% if messages %}
+
+			{% for message in messages %}
+			{{ message}}
+
+			{% endfor %}
+			{% endif %}
+
+			{% if products %}
+			<div style="width: 100%; font-weight: bold;color:#500000" id="tag">VIEW UPLOADED PRODUCTS</div>
+			<table style="width: 100%" border="0">
+				<tr style="background-color: #500000;color:#fff" align="center">
+					<td>Product name</td>
+					<td>Price</td>
+					<td>Category</td>
+					<td>Image</td>
+					<td>Remove</td>
+
+				</tr>
+				
+			{% for productdetails in products %}
+			<tr align="center">
+			<td> {{productdetails.productname}}</td>
+			<td> {{productdetails.price}}</td>
+			<td> {{productdetails.category}}</td>
+			<td> <img src='/media/{{productdetails.image}}' Alt="{{productdetails.image}}" width="100px"/></td>
+			<td><div class="delete"  style="text-decoration: underline;font-weight: bold;color: #500000;cursor: pointer">Delete<input type="text"  name="{{productdetails.productname}}" value="{{productdetails.productname}}" /></div></td>
+			</tr>
+			{% endfor %}
+			
+
+			{% endif %}
+
+				</div>
+				
+			
+
+			</div>
+
+			
+
+
+	</div>
+
+
+</body>
+</html>

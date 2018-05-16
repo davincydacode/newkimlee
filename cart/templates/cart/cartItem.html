@@ -1,0 +1,189 @@
+<html>
+<head>
+
+<title>KimLee Shooping Mall</title>
+
+{% load static %}
+{% load mathfilters %}
+
+<script type="text/javascript" src="{% static 'cart/js/jquery-3.2.1.min.js' %}"></script>
+<style type="text/css">
+	
+a:visited{
+text-decoration: none;
+color: #fff
+
+}
+a:link{
+text-decoration: none;
+color: #fff
+
+}
+
+.bj{
+background-color: #003300
+
+
+}
+</style>
+</head>
+<script type="text/javascript">
+	
+$(document).ready(function(){
+
+$(".uproducts").click(function(){
+
+
+
+x = $(this).find("input").attr('id').valueOf();
+pname = $(this).find("input").attr('name').valueOf();
+//z = $(this).find("div").attr('id').valueOf();
+
+$("#"+x).prop('disabled',false)
+$("#"+x).focus()
+
+
+
+$("#"+x).css('background-color','#500000')
+$("#"+x).css('color','#fff')
+
+
+$("#"+x).focusout(function(){
+update = $(this).val()
+
+
+$.ajax({
+type:"POST",
+url:"/kimlee/updatecart/",
+data:{
+	pname:pname,
+	update:update,
+	csrfmiddlewaretoken:'{{ csrf_token }}'
+},
+success:function(data){
+//alert(data)
+location= "/kimlee/cartitem/"
+},
+error:function(object,status,e)
+{
+alert(e)
+}
+
+})
+
+
+$("input").attr('disabled','disabled')
+$("#"+x).css('background-color','#fff')
+$("#"+x).css('color','#000')
+
+
+
+
+
+
+})
+//alert(x+y)
+
+})
+
+})
+
+</script>
+<body>
+	
+	
+	
+	
+
+	<div style="width: 100%;border:0px solid #000" >
+
+		<div id="banner" align="center" style="width:900px; height: 35%;border:1px solid #000;margin-left: 15%" align="center">
+
+			
+			<div style="position: absolute;z-index: 0.5"><img src="{% static 'cart/images/banner1.jpg'%}" width="900px" height="35%" /></div>
+			<div style="position: absolute;z-index: 1; margin-left:16%"><img src="{% static 'cart/images/cart3.png'%}" width="30%" /><img src="{% static 'cart/images/cart3.png'%}" width="30%" /></div>
+				<div style="position: absolute;z-index: 1; margin-left:25%"><p>&nbsp;</p><img src="{% static 'cart/images/cart2.png'%}" width="50%" /></div>
+				<div style="position: absolute;z-index: 1; margin-left:38%"><p>&nbsp;</p><img src="{% static 'cart/images/cart4.png'%}" width="50%" /></div>
+				<div style="position: absolute;z-index: 1; margin-left:0%"><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><h2 style="color:#fff;float: left">Benedict Ladies World</h2></div>
+				<div id="navigation_bar" style="position: absolute;z-index: 4;top:36%;width: 250px;border: 1px solid #fff;background-color: #500000;color:#fff">
+					<table border="1px";  style="width: 100%;color:#fff;font-weight: bold;border-collapse: collapse;border-color: #fff solid 1px" >
+						<tr>
+							<td><a id="#" style="cursor: pointer;">Track Delivery</a></td>
+							</tr>
+								<tr>
+							<td><a id='viewproduct' style="cursor: pointer;">Login to Account</a></td>
+							</tr>
+								<tr>
+							<td>Manage Deliverables</td>
+							</tr>
+							</table>
+				</div>
+				<div id="response_click" style="position: absolute;z-index: 4;left: 37%;top:36%;width:625px; border:1px solid #000">
+					<div style="width: 100%; font-weight: bold;color:#500000;background-color: #fff" id="tag">CartItems</div>
+					<div>
+
+						<table style="width: 100%">
+							<tr style="background-color: #500000;color:#fff" align="center">
+								
+							<td>Product Image</td>
+								<td>Product Name</td>
+								<td>Product Price</td>
+								<td>Quantity</td>
+								<td>Sub Total</td>
+							</tr>
+						</table>
+							
+						{% for mstring in myString %}
+							
+							<div class="uproducts"  >
+								
+							<div><img src="/media/{{mstring.3}}" width="80" style="float: left"></div>
+							<div id="{{mstring.0}}" style="float: left;margin-left: 15%; width: 50px"><br>{{mstring.0}}</div>
+							<div style="float: left;margin-left: 10%;width: 50px"><br>{{mstring.1}}</div>
+							<div style="float: left;margin-left: 15%;width: 50px"><br><input type="text" name= "{{mstring.0}}" id="{{mstring.2}}" value="{{mstring.2}}" size="3" disabled="disabled" /></div>
+							<div style="float: left;margin-left: 10%"><br>{{ mstring.2|mul:mstring.1}}</div>
+							
+						</div>
+					<br/>
+						<br/>
+						<br/>
+						<br/>
+						<br/>
+						<br>
+							{% endfor %}
+						
+
+							<div>
+								<div style="font-size: 15px;width:200px;height: 50px; border-radius: 15px ;border: 1px solid #ff0000; background-color: #500000;color:#fff; font-weight: bold;"><br/>Grand Total: {{sumtotal}}</div>
+
+
+							
+								
+							
+
+
+					</div>
+					<div  style="width:100%;color:#ff0000;margin-top: 7%;">
+
+						<div style="font-size: 15px;width:200px;height: 50px; border-radius: 15px ;border: 1px solid #ff0000; background-color: #500000;color:#fff;float: left;margin-left: 20%;font-weight: bold;"><a href="/kimlee/"><br><< Continue Shopping</a></div>
+
+						<div style="font-size: 15px;width:200px;height: 50px; border-radius: 15px ;border: 1px solid #ff0000; background-color: #500000;color:#fff; float: left; margin-left: 10%;font-weight: bold;"><br/>Check Out >></div>
+
+					</div>
+
+					
+
+				</div>
+				
+			
+
+			</div>
+
+			
+
+
+	</div>
+
+
+</body>
+</html>

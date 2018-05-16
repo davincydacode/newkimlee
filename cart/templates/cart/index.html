@@ -1,0 +1,160 @@
+<html>
+<head>
+
+<title>KimLee Shooping Mall</title>
+
+{% load static %}
+<script type="text/javascript" src="{% static 'cart/js/jquery-3.2.1.min.js' %}"></script>
+<style type="text/css">
+	
+a:visited{
+text-decoration: none;
+color: #fff
+
+}
+a:link{
+text-decoration: none;
+color: #fff
+
+}
+
+</style>
+</head>
+<script type="text/javascript">
+	
+$(document).ready(function(){
+
+	$('#cartItem').click(function(){
+
+x = document.getElementById('carty').innerHTML
+
+
+if(x > 0){
+
+	window.location = "/kimlee/cartitem/"
+}
+
+	})
+
+$(".productdiv").click(function(){
+
+x = $(this).find('input').attr('name').valueOf();
+y = $(this).find('input').attr('id').valueOf();
+z = $(this).find('img').attr('id').valueOf();
+carty = document.getElementById('carty').innerHTML
+//alert(x+y+z+carty)
+
+$.ajax({
+
+	type:"POST",
+	url:'/kimlee/cartproduct/',
+	data:{
+		
+		pname:x,
+		price:y,
+		img:z,
+		quantity:1,
+		carty:carty,
+
+	 csrfmiddlewaretoken:'{{ csrf_token }}'
+	},
+	success:function(data){
+
+		//location="/kimlee/"
+if(data == "Item Already Picked....quantity updated"){
+
+	alert("Quantity has been Updated")
+}
+else {
+	alert('Selected');
+}
+		
+		
+			window.location = "/kimlee/"
+			//document.getElementById('carty').value=data
+		
+
+		//$("#carty").val(data)
+
+		
+	
+
+	},
+	error:function(obj,status, e){
+		alert(e);
+	}
+
+
+})
+
+
+
+})
+
+})
+
+</script>
+<body>
+	
+	
+	<div id="cartItem"  style="width: 80px;height: 60px;color:#ff0000; position: absolute;z-index: 2;margin-left: 92.5%;margin-top: 7%;font-size: 12px; border-radius: 15px ;border: 1px solid #ff0000; background-color: #500000;color:#fff; cursor: pointer;" align="center"><br><span id="carty">{{count}}</span style="font-weight: bold;font-size: 17px"><br>Cart Items</div>
+
+	
+
+	<div style="width: 100%;border:0px solid #000" align="center" >
+
+		<div id="banner" align="center" style="width:900px; height: 35%;border:1px solid #000;margin-left: 15%">
+
+			
+			<div style="position: absolute;z-index: 0.5"><img src="{% static 'cart/images/banner1.jpg'%}" width="900px" height="35%" /></div>
+			<div style="position: absolute;z-index: 1; margin-left:16%"><img src="{% static 'cart/images/cart3.png'%}" width="30%" /><img src="{% static 'cart/images/cart3.png'%}" width="30%" /></div>
+				<div style="position: absolute;z-index: 1; margin-left:25%"><p>&nbsp;</p><img src="{% static 'cart/images/cart2.png'%}" width="50%" /></div>
+				<div style="position: absolute;z-index: 1; margin-left:38%"><p>&nbsp;</p><img src="{% static 'cart/images/cart4.png'%}" width="50%" /></div>
+				<div style="position: absolute;z-index: 1; margin-left:0%"><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><h2 style="color:#fff;float: left">Benedict Ladies World</h2></div>
+				<div id="navigation_bar" style="position: absolute;z-index: 4;top:36%;width: 250px;border: 1px solid #fff;background-color: #500000;color:#fff">
+					<table border="1px";  style="width: 100%;color:#fff;font-weight: bold;border-collapse: collapse;border-color: #fff solid 1px" >
+						<tr>
+							<td><a id="#" style="cursor: pointer;">Track Delivery</a></td>
+							</tr>
+								<tr>
+							<td><a id='viewproduct' style="cursor: pointer;">Login to Account</a></td>
+							</tr>
+								<tr>
+							<td>Manage Deliverables</td>
+							</tr>
+							</table>
+				</div>
+				<div id="response_click" style="position: absolute;z-index: 4;left: 35%;top:36%;width:650px; border:1px solid #000">
+					<div style="width: 100%; font-weight: bold;color:#500000;background-color: #fff" id="tag">OUR PRODUCTS</div>
+					<div>
+						{% if allproducts %}
+						
+						{% for allp in allproducts %}
+						<div style="border:1px solid #000 width:100px;float: left; margin-bottom: 13px" class="productdiv">
+							
+							<img src="media/{{ allp.image}}" width="150px" height="130px" id="{{allp.image}}"><br>
+							<input type="hidden" name="{{allp.productname}}" id="{{allp.price}}"/>
+							{{allp.productname}}<br>
+							{{allp.price}}<br>
+							</div>
+						{% endfor %}
+					
+						{% endif %}
+
+					</div>
+					
+
+				</div>
+				
+			
+
+			</div>
+
+			
+
+
+	</div>
+
+
+</body>
+</html>
